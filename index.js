@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 const app = express();
 
 // Express middleware being used
@@ -20,7 +20,8 @@ const db = mysql.createConnection(
   console.log(`Connected to the directory_db database.`)
 );
 
-inquirer
+function mainPrompt() {
+  inquirer
   .prompt([
     {
       type: 'list',
@@ -29,6 +30,32 @@ inquirer
       choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role'],
     },
   ])
+  .then((response) => {
+    switch (response.action) {
+      case 'View All Departments':
+        viewDepartments();
+        break;
+      case 'View All Roles':
+        viewRoles();
+        break;
+      case 'View All Employees':
+        viewEmployees();
+        break;
+      case 'Add A Department':
+        addDepartment();
+        break;
+      case 'Add A Role':
+        addRole();
+        break;
+      case 'Add An Employee':
+        addEmployee();
+        break;
+      case 'Update An Employee Role':
+        updateEmployeeRole();
+        break;
+    }
+  });
+}
 
   // Response for unused routes - 404 error
 app.use((req, res) => {
@@ -39,3 +66,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+mainPrompt();
