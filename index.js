@@ -1,13 +1,10 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const queries = require('./queries/queries.js');
 
-const PORT = 3001;
+const PORT = 3005;
 const app = express();
-
-// Express middleware being used
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 // Used to connect to the directory_db database
 const db = mysql.createConnection(
@@ -21,6 +18,9 @@ const db = mysql.createConnection(
 );
 
 function mainPrompt() {
+
+  db.start;
+
   inquirer
   .prompt([
     {
@@ -33,23 +33,29 @@ function mainPrompt() {
   .then((response) => {
     switch (response.action) {
       case 'View All Departments':
-        viewDepartments();
+        viewDepts();
         break;
+
       case 'View All Roles':
         viewRoles();
         break;
+
       case 'View All Employees':
         viewEmployees();
         break;
+
       case 'Add A Department':
         addDepartment();
         break;
+
       case 'Add A Role':
         addRole();
         break;
+
       case 'Add An Employee':
         addEmployee();
         break;
+        
       case 'Update An Employee Role':
         updateEmployeeRole();
         break;
@@ -57,13 +63,38 @@ function mainPrompt() {
   });
 }
 
-  // Response for unused routes - 404 error
-app.use((req, res) => {
-  res.status(404).end();
-});
+function viewDepts(){
+  db.start;
+  let query = "SELECT * FROM departments;"
+  db.query(query, function (err, res){
+      if (err) throw err;
+      console.log(res);
+      mainPrompt();
+  })
+};
+
+function viewRoles(){
+  let query = "SELECT * FROM roles;"
+  db.query(query, function (err, res){
+      if (err) throw err;
+      console.log(res);
+      mainPrompt();
+  })
+};
+
+function viewEmployees(){
+  let query = "SELECT * FROM employees;"
+  db.query(query, function (err, res){
+      if (err) throw err;
+      console.log(res);
+      mainPrompt();
+  })
+};
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
 mainPrompt();
+
+module.exports = {db};
