@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const queries = require('./queries/queries.js');
+
 
 const PORT = 3005;
 const app = express();
@@ -17,6 +17,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the directory_db database.`)
 );
 
+// Main inquirer prompt
 function mainPrompt() {
 
   db.start;
@@ -30,6 +31,7 @@ function mainPrompt() {
       choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role'],
     },
   ])
+  // Then statement with switch caseses for each action
   .then((response) => {
     switch (response.action) {
       case 'View All Departments':
@@ -55,7 +57,7 @@ function mainPrompt() {
       case 'Add An Employee':
         addEmployee();
         break;
-        
+
       case 'Update An Employee Role':
         updateEmployeeRole();
         break;
@@ -63,6 +65,7 @@ function mainPrompt() {
   });
 }
 
+// Function to display all departments
 function viewDepts(){
   db.start;
   let query = "SELECT * FROM departments;"
@@ -73,6 +76,7 @@ function viewDepts(){
   })
 };
 
+// Function to view all roles
 function viewRoles(){
   let query = "SELECT * FROM roles;"
   db.query(query, function (err, res){
@@ -82,6 +86,7 @@ function viewRoles(){
   })
 };
 
+// Function to view all employees
 function viewEmployees(){
   let query = "SELECT * FROM employees;"
   db.query(query, function (err, res){
